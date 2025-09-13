@@ -10,10 +10,7 @@ html, body {
   background-attachment: fixed;
   background-blend-mode: overlay;
   color: #fff;
-}
-body {
-  overflow: hidden;
-}
+
 /* #ConsoleBox { */
   /* width: 80%; */
   /* max-width: 600px; */
@@ -1145,3 +1142,7 @@ body {
         0 0 10px rgb(255, 255, 255),
         0 0 20px rgb(255, 255, 255);
     }
+}
+body {
+  overflow: hidden;
+}

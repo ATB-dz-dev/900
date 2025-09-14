@@ -108,11 +108,10 @@ function CheckFW() {
     'jailbreak-page', 'jailbreak', 'autojbchkb', 'agtext',
     'payloadsbtn', 'generate-cache-btn', 'update-exploit', 'settings-btn'
   ];
-  
+
   if (ps4Regex.test(userAgent)) {
-    // Extract firmware version using regex
     const match = userAgent.match(ps4Regex);
-    const fwVersion = match ? match[1] : "Unknown"; // Get the firmware version or default to "Unknown"
+    const fwVersion = match ? match[1] : "Unknown";
 
     if (
       fwVersion === '9.00' || fwVersion === '9.03' || fwVersion === '9.60' ||
@@ -124,14 +123,16 @@ function CheckFW() {
     ) {
       document.getElementById('PS4FW').textContent = `PS4 FW: ${fwVersion} | Compatible`;
       document.getElementById('PS4FW').style.color = 'green';
-	  document.getElementById('PS4FW').style.fontSize = '60px';
-	  document.getElementById('PS4FW').style.fontFamily = 'TheRaveI';
+      document.getElementById('PS4FW').style.fontSize = '60px';
+      document.getElementById('PS4FW').style.fontFamily = 'TheRaveI';
+
       ps4fw = fwVersion.replace('.', '');
       document.getElementById('install-psfrf').style.display = 'flex';
+
       if (ps4fw === '903' || ps4fw === '960') {
         document.getElementById('gameb').style.display = 'none';
       }
-      if (ps4fw === '900' || ps4fw === '903' || ps4fw === '960'){
+      if (ps4fw === '900' || ps4fw === '903' || ps4fw === '960') {
         document.getElementById('linuxb').style.display = 'flex';
       }
     } else {
@@ -147,19 +148,82 @@ function CheckFW() {
     document.title = "PSFree | " + fwVersion;
   } else {
     let platform = 'Unknown platform';
+    if (/Android/.test(userAgent)) platform = 'Android';
+    else if (/iPhone|iPad|iPod/.test(userAgent)) platform = 'iPhone|iPad|iPod';
+    else if (/Macintosh/.test(userAgent)) platform = 'MacOS';
+    else if (/Windows/.test(userAgent)) platform = 'Windows';
+    else if (/Linux/.test(userAgent)) platform = 'Linux';
 
-    if (/Android/.test(userAgent)) platform = 'اندرويد';
-    else if (/iPhone|iPad|iPod/.test(userAgent)) platform = 'ايفون';
-    else if (/Macintosh/.test(userAgent)) platform = 'ماك او اس';
-    else if (/Windows/.test(userAgent)) platform = 'ويندوز';
-    else if (/Linux/.test(userAgent)) platform = 'لينكس';
+    /* === overlay للتظليل === */
+    const overlay = document.createElement('div');
+    overlay.id = 'ps-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.inset = '0';
+    overlay.style.background = 'rgba(0,0,0,0.6)';
+    overlay.style.backdropFilter = 'blur(6px)';
+    overlay.style.webkitBackdropFilter = 'blur(6px)';
+    overlay.style.zIndex = '998';
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 300ms ease';
+    const wm = document.getElementById("consoleWatermark");
+    /* نص النظام */
+    const ps4fwDiv = document.createElement("div");
+    ps4fwDiv.textContent = `You are not on PS4, your system is ${platform}`;
+    ps4fwDiv.style.color = 'white';
+    ps4fwDiv.style.fontSize = '30px';
+    ps4fwDiv.style.position = "absolute";
+    ps4fwDiv.style.top = "60%";
+    ps4fwDiv.style.left = "50%";
+    ps4fwDiv.style.transform = "translate(-50%, -50%)";
+    ps4fwDiv.style.zIndex = "999";
+    ps4fwDiv.style.whiteSpace = "nowrap";
+    /* نص Unknown platform */
+    const unplat = document.createElement("div");
+    unplat.id = 'unplat';
+    unplat.textContent = "Unsupported platform";
+    unplat.style.color = 'red';
+    unplat.style.fontSize = '40px';
+    unplat.style.fontFamily = 'TheRaveI';
+    unplat.style.position = "fixed";
+    unplat.style.top = "50%";
+    unplat.style.left = "50%";
+    unplat.style.transform = "translate(-50%, -50%)";
+    unplat.style.zIndex = '999';
+unplat.style.textShadow = "10 10 40px red, 0 0 100px red, 0 0 50px red";
 
-    document.getElementById('PS4FW').textContent = `انت مش علي بلايستيشن 4, نظام التشغيل: ${platform}`;
-    document.getElementById('PS4FW').style.color = 'white';
 
-    elementsToHide.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = 'none';
+
+    unplat.style.animation = "glowPulse 0.5s infinite alternate";
+    unplat.style.whiteSpace = "nowrap";
+    // أضف الأنيميشن لو مش موجود
+    if (!document.getElementById('ps-overlay-styles')) {
+      const style = document.createElement('style');
+      style.id = 'ps-overlay-styles';
+      style.textContent = `
+        @keyframes glowPulse {
+          0% {
+            text-shadow: 10 10 40px red, 0 0 100px red, 0 0 50px red;
+
+
+            color: red;
+          }
+          100% {
+            text-shadow: 0 0 20px red, 0 0 40px orange, 0 0 60px yellow;
+            color: #ffcccc;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // 🧹 فرغ الصفحة وأضف العناصر فقط
+    document.body.replaceChildren(overlay, ps4fwDiv, unplat, consoleWatermark);
+    
+     
+    // فعل دخول التظليل تدريجيًا
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '1';
+	   wm.style.display = "block";   // إظهارها
     });
   }
 }

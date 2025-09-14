@@ -10,6 +10,7 @@ html, body {
   background-attachment: fixed;
   background-blend-mode: overlay;
   color: #fff;
+}
 
 /* #ConsoleBox { */
   /* width: 80%; */
@@ -231,23 +232,56 @@ html, body {
 }
 
 /* Console */
+/* ====== Console (احتفظنا بكل ستايلاتك الأصلية مع تعديل بسيط للـ z-index) ====== */
 #consoleLOG {
   color: #FFF;
   background-color: #6f707433;
   border-radius: 18px;
   width: 90%;
   height: 18%;
-  margin: 0 auto; 
+  margin: 0 auto;
   border: 1px solid #FFB84D;
-  padding: 10px; 
+  padding: 10px;
   display: flex;
-  align-items: center;
-  position: absolute;
+  flex-direction: column;   /* يخلي العناصر تحت بعض */
+  align-items: flex-start;  /* يبدأ من اليسار */
+  justify-content: flex-start; /* يبدأ من الأعلى */
+  position: fixed;
   bottom: 20px;
   left: 5px;
   right: 5px;
   overflow-y: auto;
   overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+
+/* السطور/المدخلات داخل الكونسول (تأكد أنها فوق watermark) */
+#consoleLOG .log-entry {
+  color: #FFF;
+  font-size: 14px;           /* حجم رسائل اللوق (تقدر تغيّره) */
+  line-height: 1.2;
+  z-index: 3;
+}
+#consoleWatermark {
+  position: fixed;           /* ثابت بالنسبة للنافذة */
+  bottom: 20px;
+  left: 5px;
+  right: 5px;
+  height: 18%;
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;      /* لا يعيق النقرات */
+  user-select: none;
+  font-family: 'TheRaveI', sans-serif;
+  font-size: 150px;           /* الحجم اللي طلبته */
+  line-height: 1;
+  color: rgba(255,255,255,0.5); /* شفافية 50% */
+  text-align: center;
+  z-index: 1;                /* خلف صندوق الكونسول */
 }
 
 /* Floating Menu */
@@ -1142,7 +1176,6 @@ html, body {
         0 0 10px rgb(255, 255, 255),
         0 0 20px rgb(255, 255, 255);
     }
-}
-body {
+	body {
   overflow: hidden;
 }
